@@ -144,3 +144,19 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(products[0].id, original_id)
         # Assert that the fetched product has the updated description.
         self.assertEqual(products[0].description, "updated description")
+
+    def test_delete_a_product(self):
+        """ It should Delete a Product """
+        product = ProductFactory()
+        product.id = None
+        product.create()
+        products = Product.all()
+        self.assertEqual(len(products), 1)
+        # find the product to delete and delete it
+        productToDelete = Product.find(product.id)
+        productToDelete.delete()
+        # get the products from database again and assert len equals 0
+        products = Product.all()
+        self.assertEqual(len(products), 0)
+
+        
