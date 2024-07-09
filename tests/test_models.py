@@ -126,12 +126,10 @@ class TestProductModel(unittest.TestCase):
         # Set the ID of the product object to None and then call the create() method on the product.
         product.id = None
         product.create()
-        # Log the product object again after it has been created to verify that the product was created with the desired properties.
         # Assert that the ID of the product object is not None after calling the create() method.
         self.assertIsNotNone(product.id)
         # Update the product in the system with the new property values using the update() method.
         product.description = "updated description"
-        # Assert that the id is same as the original id but description property of the product object has been updated correctly after calling the update() method.
         original_id = product.id
         product.update()
         self.assertEqual(product.id, original_id)
@@ -169,5 +167,18 @@ class TestProductModel(unittest.TestCase):
         products = Product.all()
         self.assertEqual(len(products), 5)
 
+    def test_find_by_name(self):
+        """It should Find a Product by Name"""
+        products = ProductFactory.create_batch(5)
+        for product in products:
+            product.create()
+        name = products[0].name
+        count = len([product for product in products if product.name == name])
+        foundProducts = Product.find_by_name(name)
+        self.assertEqual(foundProducts.count(), count)
+        for product in foundProducts:
+            self.assertEqual(product.name, name)
     
+    def test_find_a_product_by_availability(self):
+        """ It shoud Find a Product by Availability """
         
