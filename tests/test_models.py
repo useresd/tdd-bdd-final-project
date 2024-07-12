@@ -27,7 +27,7 @@ import os
 import logging
 import unittest
 from decimal import Decimal
-from service.models import Product, Category, db
+from service.models import Product, Category, db, DataValidationError
 from service import app
 from tests.factories import ProductFactory
 
@@ -142,6 +142,14 @@ class TestProductModel(unittest.TestCase):
         # Assert that the fetched product has the updated description.
         self.assertEqual(products[0].description, "updated description")
 
+    def test_update_a_product_fails_without_id(self):
+        """ It should raise an error when updating a record without id """
+        # This was added to increase the test coverate as required by the acceptance criteria
+        product = ProductFactory()
+        product.id = None
+        with self.assertRaises(DataValidationError):
+            product.update()
+
     def test_delete_a_product(self):
         """ It should Delete a Product """
         product = ProductFactory()
@@ -206,3 +214,16 @@ class TestProductModel(unittest.TestCase):
 
         for product in found:
             self.assertEqual(product.category, category)
+
+    def test_find_a_product_by_price(self):
+        """ It should find a Product by Price """
+        # This test was added to increase the code coverage
+        # as required by Acceptance Criteria
+        products = ProductFactory.create_batch(10)
+        for product in products:
+            product.create()
+
+        price = products[0].price
+        count = len([product for product in products if product.price == price])
+        found = Product.find_by_price(price)
+        self.assertEqual(found.count(), count)
