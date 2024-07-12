@@ -98,9 +98,19 @@ def create_products():
 # L I S T   A L L   P R O D U C T S
 ######################################################################
 
-#
-# PLACE YOUR CODE TO LIST ALL PRODUCTS HERE
-#
+@app.route("/products/<product_id>", methods=["GET"])
+def get_products(product_id):
+    """Route for getting a product by providing the product id"""
+
+    app.logger.info("Request to Retrieve a product with id [%s]", product_id)
+
+    product = Product.find(product_id)
+    if not product:
+        abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found.")
+
+    app.logger.info("Returning product: %s", product.name)
+
+    return product.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # R E A D   A   P R O D U C T
