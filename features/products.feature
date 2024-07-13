@@ -43,7 +43,7 @@ Scenario: Read a Product
     When I visit the "Home Page"
     And I set the "Name" to "Hat"
     And I press the "Search" button
-    Then I shoud see the message "Success"
+    Then I should see the message "Success"
     When I copy the "Id" field
     And I press the "Clear" button
     And I paste the "Id" field
