@@ -105,12 +105,16 @@ def list_products():
     products = []
     name_query = request.args.get("name")
     category = request.args.get("category")
+    available = request.args.get("available")
 
     if name_query:
         products = Product.find_by_name(name_query)
     elif category:
         category_value = getattr(Category, category.upper())
         products = Product.find_by_category(category_value)
+    elif available:
+        available_value = available.lower() in ["true", "yes", "1"]
+        products = Product.find_by_availability(available_value)
     else:
         products = Product.all()
 
