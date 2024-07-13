@@ -102,7 +102,14 @@ def create_products():
 def list_products():
     """Returns a list of Products"""
     app.logger.info("Request to list Products...")
-    products = Product.all()
+    products = []
+    name_query = request.args.get("name")
+
+    if name_query:
+        products = Product.find_by_name(name_query)
+    else:
+        products = Product.all()
+
     results = [product.serialize() for product in products]
     app.logger.info("[%s] Products returned", len(results))
     return results, status.HTTP_200_OK
